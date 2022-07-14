@@ -13,6 +13,8 @@ import { JwtModule, JwtService } from '@nestjs/jwt';
 // import { Response, Res } from '@nestjs/common';
 // import { response } from 'express';
 import { Response } from 'express'
+import { CurrentUserJwt } from './decorators/currrent-userjwt.decorator';
+import { JwtAuthGuard } from 'src/guards/jwtauth.guard';
 
 @Controller('auth')
 @Serialize(UserDto)
@@ -24,9 +26,16 @@ export class UsersController {
     ) { }
 
     @Get('whoami')
-    // @UseGuards(AuthGuard)
+    @UseGuards(AuthGuard)
     whoAmI(@CurrentUser() user: User) {
         // console.log(user);
+        return user;
+    }
+
+    @Get('getloggedinuser')
+    @UseGuards(JwtAuthGuard)
+    getUser(@CurrentUserJwt() user: User) {
+        console.log(user);
         return user;
     }
 
